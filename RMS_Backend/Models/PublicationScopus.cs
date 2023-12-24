@@ -1,14 +1,22 @@
-﻿namespace RMS_Backend.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace RMS_Backend.Models
 {
     public class PublicationScopus
     {
-        public string DOINumber { get; set; }
+        [Required]
+        [Key]
+        public string DOI { get; set; }
+        [Required]
         public string Title { get; set; }
+        [Required]
         public DateTime PublicationDate { get; set; }
-        public int Pages { get; set; }
+        public int? Pages { get; set; }
+        public int? AuthorsNo { get; set; }
+        public string? Authors { get; set; }
 
-        /*
-         * TODO: add one-to-many ICollection of authors(users) (what if we have author that is not a user?)
-         */
+        [Required]
+        public string PersonnelNumber { get; set; }
+        public User User { get; set; }
     }
 }
