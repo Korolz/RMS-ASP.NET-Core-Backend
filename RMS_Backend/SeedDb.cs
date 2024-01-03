@@ -1,5 +1,7 @@
-﻿using RMS_Backend.Data;
+﻿using System.Text;
+using RMS_Backend.Data;
 using RMS_Backend.Models;
+using static RMS_Backend.HashHelper;
 
 namespace RMS_Backend
 {
@@ -20,37 +22,38 @@ namespace RMS_Backend
                     {
                         PersonnelNumber = "P12345",
                         Username = "korolz",
-                        Password = "12345", //change when do encryption
+                        Password = HashHelper.ComputeSHA256Hash("12345"),
                         IsAdmin = true
                     },
                     new User()
                     {
                         PersonnelNumber = "P00001",
                         Username = "askat",
-                        Password = "00001", //change when do encryption
+                        Password = HashHelper.ComputeSHA256Hash("00001"),
                         IsAdmin= true
                     },
                     new User()
                     {
                         PersonnelNumber = "P55555",
                         Username = "ibrahim",
-                        Password = "55555", //change when do encryption
+                        Password = HashHelper.ComputeSHA256Hash("55555"),
                     }
                 };
 
-                var initialScopus = new List<PublicationScopus>()
+                var initialPublications = new List<Publication>()
                 {
-                    new PublicationScopus()
+                    new Publication()
                     {
                         DOI = "10.1080/10494820.2023.2253858",
                         Title = "The opportunities and challenges of ChatGPT in education",
                         PublicationDate = new DateTime(2023, 9, 2),
-                        PersonnelNumber = "P55555"
+                        PersonnelNumber = "P55555",
+                        PublicationWebOfScience = new PublicationWebOfScience{ DOI = "10.1080/10494820.2023.2253858", ID = 1, WOSNumber = "4124354543242"}
                     }
                 };
 
                 dbContext.Users.AddRange(initialUsers);
-                dbContext.PublicationsScopus.AddRange(initialScopus);
+                dbContext.Publications.AddRange(initialPublications);
 
                 dbContext.SaveChanges();
             }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RMS_Backend.Data;
 using RMS_Backend.Models;
+using static RMS_Backend.HashHelper;
 
 namespace RMS_Backend.Controllers
 {
@@ -16,6 +17,7 @@ namespace RMS_Backend.Controllers
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginModel model)
         {
+            model.Password = HashHelper.ComputeSHA256Hash(model.Password);
             // Check for existing user
             var user = _dbContext.Users.FirstOrDefault(u => u.Username == model.Username);
             if (user != null)
@@ -37,7 +39,6 @@ namespace RMS_Backend.Controllers
                 }
             }
 
-            // Пользователь не найден или пароль неверен
             return Unauthorized(new { Message = "User not found" });
         }
     }

@@ -22,7 +22,7 @@ namespace RMS_Backend.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("RMS_Backend.Models.PublicationScopus", b =>
+            modelBuilder.Entity("RMS_Backend.Models.Publication", b =>
                 {
                     b.Property<string>("DOI")
                         .HasColumnType("text");
@@ -31,6 +31,15 @@ namespace RMS_Backend.Migrations
                         .HasColumnType("text");
 
                     b.Property<int?>("AuthorsNo")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("JournalISSN")
+                        .HasColumnType("text");
+
+                    b.Property<string>("JournalTitle")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("No")
                         .HasColumnType("integer");
 
                     b.Property<int?>("Pages")
@@ -47,41 +56,69 @@ namespace RMS_Backend.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int?>("Vol")
+                        .HasColumnType("integer");
+
                     b.HasKey("DOI");
 
                     b.HasIndex("PersonnelNumber");
+
+                    b.ToTable("Publications");
+                });
+
+            modelBuilder.Entity("RMS_Backend.Models.PublicationScopus", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
+
+                    b.Property<string>("DOI")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("DOI")
+                        .IsUnique();
 
                     b.ToTable("PublicationsScopus");
                 });
 
             modelBuilder.Entity("RMS_Backend.Models.PublicationWebOfScience", b =>
                 {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
+
                     b.Property<string>("DOI")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Authors")
-                        .HasColumnType("text");
-
-                    b.Property<int?>("AuthorsNo")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("Pages")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("PersonnelNumber")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("PublicationDate")
-                        .HasColumnType("timestamp");
+                    b.Property<bool>("HasAbroadAuthor")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
 
-                    b.Property<string>("Title")
+                    b.Property<bool>("IsAbroadAuthorTop400")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("Top400UniversityName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("WOSNumber")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("DOI");
+                    b.HasKey("ID");
 
-                    b.HasIndex("PersonnelNumber");
+                    b.HasIndex("DOI")
+                        .IsUnique();
 
                     b.ToTable("PublicationsWebOfScience");
                 });
@@ -113,6 +150,9 @@ namespace RMS_Backend.Migrations
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("text");
 
+                    b.Property<string>("Status")
+                        .HasColumnType("text");
+
                     b.Property<string>("Surname")
                         .HasColumnType("text");
 
@@ -125,33 +165,49 @@ namespace RMS_Backend.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("RMS_Backend.Models.PublicationScopus", b =>
+            modelBuilder.Entity("RMS_Backend.Models.Publication", b =>
                 {
                     b.HasOne("RMS_Backend.Models.User", "User")
-                        .WithMany("PublicationsScopus")
+                        .WithMany("Publications")
                         .HasForeignKey("PersonnelNumber")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("RMS_Backend.Models.PublicationScopus", b =>
+                {
+                    b.HasOne("RMS_Backend.Models.Publication", "Publication")
+                        .WithOne("PublicationScopus")
+                        .HasForeignKey("RMS_Backend.Models.PublicationScopus", "DOI")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Publication");
                 });
 
             modelBuilder.Entity("RMS_Backend.Models.PublicationWebOfScience", b =>
                 {
-                    b.HasOne("RMS_Backend.Models.User", "User")
-                        .WithMany("PublicationsWebOfScience")
-                        .HasForeignKey("PersonnelNumber")
+                    b.HasOne("RMS_Backend.Models.Publication", "Publication")
+                        .WithOne("PublicationWebOfScience")
+                        .HasForeignKey("RMS_Backend.Models.PublicationWebOfScience", "DOI")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("Publication");
+                });
+
+            modelBuilder.Entity("RMS_Backend.Models.Publication", b =>
+                {
+                    b.Navigation("PublicationScopus");
+
+                    b.Navigation("PublicationWebOfScience");
                 });
 
             modelBuilder.Entity("RMS_Backend.Models.User", b =>
                 {
-                    b.Navigation("PublicationsScopus");
-
-                    b.Navigation("PublicationsWebOfScience");
+                    b.Navigation("Publications");
                 });
 #pragma warning restore 612, 618
         }
