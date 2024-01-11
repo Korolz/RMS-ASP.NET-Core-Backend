@@ -12,8 +12,8 @@ using RMS_Backend.Data;
 namespace RMS_Backend.Migrations
 {
     [DbContext(typeof(RMSDbContext))]
-    [Migration("20240103190124_InitialDatabase")]
-    partial class InitialDatabase
+    [Migration("20240111010154_InitialRMSDatabase")]
+    partial class InitialRMSDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -44,17 +44,23 @@ namespace RMS_Backend.Migrations
                     b.Property<int?>("No")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("Pages")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("PersonnelNumber")
-                        .IsRequired()
+                    b.Property<string>("Pages")
                         .HasColumnType("text");
 
                     b.Property<DateTime>("PublicationDate")
                         .HasColumnType("timestamp");
 
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text")
+                        .HasDefaultValue("Waiting");
+
                     b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserPersonnelNumber")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -63,41 +69,24 @@ namespace RMS_Backend.Migrations
 
                     b.HasKey("DOI");
 
-                    b.HasIndex("PersonnelNumber");
+                    b.HasIndex("UserPersonnelNumber");
 
                     b.ToTable("Publications");
                 });
 
             modelBuilder.Entity("RMS_Backend.Models.PublicationScopus", b =>
                 {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
-
                     b.Property<string>("DOI")
-                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("ID");
-
-                    b.HasIndex("DOI")
-                        .IsUnique();
+                    b.HasKey("DOI");
 
                     b.ToTable("PublicationsScopus");
                 });
 
             modelBuilder.Entity("RMS_Backend.Models.PublicationWebOfScience", b =>
                 {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
-
                     b.Property<string>("DOI")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<bool>("HasAbroadAuthor")
@@ -117,10 +106,7 @@ namespace RMS_Backend.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("ID");
-
-                    b.HasIndex("DOI")
-                        .IsUnique();
+                    b.HasKey("DOI");
 
                     b.ToTable("PublicationsWebOfScience");
                 });
@@ -171,7 +157,7 @@ namespace RMS_Backend.Migrations
                 {
                     b.HasOne("RMS_Backend.Models.User", "User")
                         .WithMany("Publications")
-                        .HasForeignKey("PersonnelNumber")
+                        .HasForeignKey("UserPersonnelNumber")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

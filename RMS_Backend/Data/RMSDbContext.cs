@@ -15,8 +15,8 @@ namespace RMS_Backend.Data
             //setting Primary Keys
             modelBuilder.Entity<User>().HasKey(u => u.PersonnelNumber);
             modelBuilder.Entity<Publication>().HasKey(p => p.DOI);
-            modelBuilder.Entity<PublicationScopus>().HasKey(p => p.ID);
-            modelBuilder.Entity<PublicationWebOfScience>().HasKey(p => p.ID);
+            modelBuilder.Entity<PublicationScopus>().HasKey(p => p.DOI);
+            modelBuilder.Entity<PublicationWebOfScience>().HasKey(p => p.DOI);
 
             //setting requirements
             modelBuilder.Entity<User>().Property(u => u.PersonnelNumber).IsRequired();
@@ -25,38 +25,49 @@ namespace RMS_Backend.Data
 
             modelBuilder.Entity<Publication>().Property(p => p.DOI).IsRequired();
             modelBuilder.Entity<Publication>().Property(p => p.Title).IsRequired();
-            modelBuilder.Entity<Publication>().Property(p => p.PersonnelNumber).IsRequired();
+            modelBuilder.Entity<Publication>().Property(p => p.Status).HasDefaultValue("Waiting");
 
-            modelBuilder.Entity<PublicationScopus>().Property(p => p.ID).IsRequired();
             modelBuilder.Entity<PublicationScopus>().Property(p => p.DOI).IsRequired();
+            //modelBuilder.Entity<PublicationScopus>().Property(p => p.DOI).IsRequired();
 
-            modelBuilder.Entity<PublicationWebOfScience>().Property(p => p.ID).IsRequired();
             modelBuilder.Entity<PublicationWebOfScience>().Property(p => p.DOI).IsRequired();
+            //modelBuilder.Entity<PublicationWebOfScience>().Property(p => p.DOI).IsRequired();
             modelBuilder.Entity<PublicationWebOfScience>().Property(p => p.HasAbroadAuthor).HasDefaultValue(false);
             modelBuilder.Entity<PublicationWebOfScience>().Property(p => p.IsAbroadAuthorTop400).HasDefaultValue(false);
 
             //setting timestamp property for publications
-            modelBuilder.Entity<Publication>()
-            .Property(p => p.PublicationDate)
-            .HasColumnType("timestamp");
+            modelBuilder.Entity<Publication>().Property(p => p.PublicationDate).HasColumnType("timestamp");
 
-            //setting relation for User->Publications
-            modelBuilder.Entity<Publication>()
-                .HasOne(p => p.User)
-                .WithMany(u => u.Publications)
-                .HasForeignKey(p => p.PersonnelNumber);
-
-            //setting relation for Publication->WoS
-            modelBuilder.Entity<Publication>()
-                .HasOne(p => p.PublicationWebOfScience)
-                .WithOne(w => w.Publication)
-                .HasForeignKey<PublicationWebOfScience>(w => w.DOI);
-
-            //setting relation for Publication->Scopus
+            //setting one-to-one relation
             modelBuilder.Entity<Publication>()
                 .HasOne(p => p.PublicationScopus)
-                .WithOne(s => s.Publication)
-                .HasForeignKey<PublicationScopus>(s => s.DOI);
+                .WithOne(ps => ps.Publication)
+                .HasForeignKey<PublicationScopus>(ps => ps.DOI);
+
+            modelBuilder.Entity<Publication>()
+                .HasOne(p => p.PublicationWebOfScience)
+                .WithOne(ps => ps.Publication)
+                .HasForeignKey<PublicationWebOfScience>(wos => wos.DOI);
+
+            //setting one-to-many relation
+
+            ////setting relation for User->Publications
+            //modelBuilder.Entity<Publication>()
+            //    .HasOne(p => p.User)
+            //    .WithMany(u => u.Publications)
+            //    .HasForeignKey(p => p.PersonnelNumber);
+
+            ////setting relation for Publication->WoS
+            //modelBuilder.Entity<Publication>()
+            //    .HasOne(p => p.PublicationWebOfScience)
+            //    .WithOne(w => w.Publication)
+            //    .HasForeignKey<PublicationWebOfScience>(w => w.DOI);
+
+            ////setting relation for Publication->Scopus
+            //modelBuilder.Entity<Publication>()
+            //    .HasOne(p => p.PublicationScopus)
+            //    .WithOne(s => s.Publication)
+            //    .HasForeignKey<PublicationScopus>(s => s.DOI);
         }
 
         //adding DbSets of Tables in our database

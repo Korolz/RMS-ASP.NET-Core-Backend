@@ -1,12 +1,11 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
 namespace RMS_Backend.Migrations
 {
-    public partial class InitialDatabase : Migration
+    public partial class InitialRMSDatabase : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -40,19 +39,20 @@ namespace RMS_Backend.Migrations
                     PublicationDate = table.Column<DateTime>(type: "timestamp", nullable: false),
                     Vol = table.Column<int>(type: "integer", nullable: true),
                     No = table.Column<int>(type: "integer", nullable: true),
-                    Pages = table.Column<int>(type: "integer", nullable: true),
+                    Pages = table.Column<string>(type: "text", nullable: true),
                     AuthorsNo = table.Column<int>(type: "integer", nullable: true),
                     Authors = table.Column<string>(type: "text", nullable: true),
                     JournalTitle = table.Column<string>(type: "text", nullable: true),
                     JournalISSN = table.Column<string>(type: "text", nullable: true),
-                    PersonnelNumber = table.Column<string>(type: "text", nullable: false)
+                    Status = table.Column<string>(type: "text", nullable: false, defaultValue: "Waiting"),
+                    UserPersonnelNumber = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Publications", x => x.DOI);
                     table.ForeignKey(
-                        name: "FK_Publications_Users_PersonnelNumber",
-                        column: x => x.PersonnelNumber,
+                        name: "FK_Publications_Users_UserPersonnelNumber",
+                        column: x => x.UserPersonnelNumber,
                         principalTable: "Users",
                         principalColumn: "PersonnelNumber",
                         onDelete: ReferentialAction.Cascade);
@@ -62,13 +62,11 @@ namespace RMS_Backend.Migrations
                 name: "PublicationsScopus",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     DOI = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PublicationsScopus", x => x.ID);
+                    table.PrimaryKey("PK_PublicationsScopus", x => x.DOI);
                     table.ForeignKey(
                         name: "FK_PublicationsScopus_Publications_DOI",
                         column: x => x.DOI,
@@ -81,17 +79,15 @@ namespace RMS_Backend.Migrations
                 name: "PublicationsWebOfScience",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    DOI = table.Column<string>(type: "text", nullable: false),
                     WOSNumber = table.Column<string>(type: "text", nullable: false),
                     HasAbroadAuthor = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
                     IsAbroadAuthorTop400 = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
-                    Top400UniversityName = table.Column<string>(type: "text", nullable: true),
-                    DOI = table.Column<string>(type: "text", nullable: false)
+                    Top400UniversityName = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PublicationsWebOfScience", x => x.ID);
+                    table.PrimaryKey("PK_PublicationsWebOfScience", x => x.DOI);
                     table.ForeignKey(
                         name: "FK_PublicationsWebOfScience_Publications_DOI",
                         column: x => x.DOI,
@@ -101,21 +97,9 @@ namespace RMS_Backend.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Publications_PersonnelNumber",
+                name: "IX_Publications_UserPersonnelNumber",
                 table: "Publications",
-                column: "PersonnelNumber");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PublicationsScopus_DOI",
-                table: "PublicationsScopus",
-                column: "DOI",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PublicationsWebOfScience_DOI",
-                table: "PublicationsWebOfScience",
-                column: "DOI",
-                unique: true);
+                column: "UserPersonnelNumber");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

@@ -2,6 +2,8 @@ using System.Configuration;
 using Microsoft.EntityFrameworkCore;
 using RMS_Backend;
 using RMS_Backend.Data;
+using RMS_Backend.Interfaces;
+using RMS_Backend.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +12,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 builder.Services.AddTransient<SeedDb>();
+
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -44,6 +54,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseSession();
 
 app.MapControllers();
 

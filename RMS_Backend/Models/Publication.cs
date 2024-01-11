@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace RMS_Backend.Models
 {
@@ -9,15 +10,18 @@ namespace RMS_Backend.Models
         public DateTime PublicationDate { get; set; }
         public int? Vol { get; set; }
         public int? No { get; set; }
-        public int? Pages { get; set; }
+        public string? Pages { get; set; }
         public int? AuthorsNo { get; set; }
         public string? Authors { get; set; }
 
         public string? JournalTitle { get; set; }
         public string? JournalISSN { get; set; }
 
-        public string PersonnelNumber { get; set; }
+        //public string PersonnelNumber { get; set; }
 
+        public string Status { get; set; }
+
+        [JsonIgnore]
         public User User { get; set; }
 
         public PublicationScopus? PublicationScopus { get; set; }
