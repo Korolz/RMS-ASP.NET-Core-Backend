@@ -9,6 +9,9 @@ namespace RMS_Backend.Helper
         public MappingProfiles()
         {
             CreateMap<User, UserDto>();
+            CreateMap<UserDto, User>();
+            CreateMap<Publication, PublicationDto>();
+            CreateMap<PublicationDto, Publication>();
         }
     }
 }

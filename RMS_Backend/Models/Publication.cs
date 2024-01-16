@@ -23,8 +23,9 @@ namespace RMS_Backend.Models
 
         [JsonIgnore]
         public User User { get; set; }
-
+        
         public PublicationScopus? PublicationScopus { get; set; }
+        
         public PublicationWebOfScience? PublicationWebOfScience { get; set; }
     }
 }

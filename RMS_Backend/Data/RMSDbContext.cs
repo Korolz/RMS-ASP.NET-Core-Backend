@@ -22,6 +22,7 @@ namespace RMS_Backend.Data
             modelBuilder.Entity<User>().Property(u => u.PersonnelNumber).IsRequired();
             modelBuilder.Entity<User>().Property(u => u.Username).IsRequired();
             modelBuilder.Entity<User>().Property(u => u.Password).IsRequired();
+            modelBuilder.Entity<User>().Property(u => u.AdminType).HasDefaultValue(0);
 
             modelBuilder.Entity<Publication>().Property(p => p.DOI).IsRequired();
             modelBuilder.Entity<Publication>().Property(p => p.Title).IsRequired();

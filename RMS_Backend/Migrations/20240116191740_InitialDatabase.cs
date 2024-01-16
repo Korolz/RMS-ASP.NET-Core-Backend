@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace RMS_Backend.Migrations
 {
-    public partial class InitialRMSDatabase : Migration
+    public partial class InitialDatabase : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -17,6 +17,7 @@ namespace RMS_Backend.Migrations
                     Username = table.Column<string>(type: "text", nullable: false),
                     Password = table.Column<string>(type: "text", nullable: false),
                     IsAdmin = table.Column<bool>(type: "boolean", nullable: false),
+                    AdminType = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
                     Name = table.Column<string>(type: "text", nullable: true),
                     Surname = table.Column<string>(type: "text", nullable: true),
                     Status = table.Column<string>(type: "text", nullable: true),

@@ -25,7 +25,8 @@ namespace RMS_Backend
                         Password = HashHelper.ComputeSHA256Hash("12345"),
                         Name = "Roman",
                         Surname = "Korolev",
-                        IsAdmin = true
+                        IsAdmin = true,
+                        AdminType = 1
                     },
                     new User()
                     {
@@ -34,7 +35,18 @@ namespace RMS_Backend
                         Password = HashHelper.ComputeSHA256Hash("00001"),
                         Name = "Askat",
                         Surname = "Seitakunov",
-                        IsAdmin= true
+                        IsAdmin= true,
+                        AdminType = 2,
+                    },
+                    new User()
+                    {
+                        PersonnelNumber = "P33333",
+                        Username = "bob",
+                        Password = HashHelper.ComputeSHA256Hash("33333"),
+                        Name = "Bob",
+                        Surname = "Boss",
+                        IsAdmin = true,
+                        AdminType = 3,
                     },
                     new User()
                     {
@@ -72,19 +84,7 @@ namespace RMS_Backend
                     }
                 };
 
-                //var initialPublications = new List<Publication>()
-                //{
-                //    new Publication()
-                //    {
-                //        DOI = "10.1080/10494820.2023.2253858",
-                //        Title = "The opportunities and challenges of ChatGPT in education",
-                //        PublicationDate = new DateTime(2023, 9, 2),
-                //        PublicationWebOfScience = new PublicationWebOfScience{ ID = 1, WOSNumber = "4124354543242"}
-                //    }
-                //};
-
                 dbContext.Users.AddRange(initialUsers);
-                //dbContext.Publications.AddRange(initialPublications);
 
                 dbContext.SaveChanges();
             }

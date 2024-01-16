@@ -114,6 +114,11 @@ namespace RMS_Backend.Migrations
                     b.Property<string>("PersonnelNumber")
                         .HasColumnType("text");
 
+                    b.Property<int>("AdminType")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
+
                     b.Property<string>("Department")
                         .HasColumnType("text");
 

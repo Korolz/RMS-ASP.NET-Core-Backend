@@ -16,6 +16,7 @@ builder.Services.AddTransient<SeedDb>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IPublicationRepository, PublicationRepository>();
 
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();

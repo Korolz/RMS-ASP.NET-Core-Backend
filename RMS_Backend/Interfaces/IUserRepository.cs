@@ -7,6 +7,7 @@ namespace RMS_Backend.Interfaces
         ICollection<Publication> GetUserPublications(string userPersonnelNumber);
         User GetUser(string userPersonnelNumber);
         bool UserExist(string userPersonnelNumber);
-
+        bool UpdatePassword(User user);
+        bool Save();
     }
 }

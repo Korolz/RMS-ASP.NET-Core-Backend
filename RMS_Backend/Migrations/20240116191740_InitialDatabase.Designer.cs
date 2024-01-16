@@ -12,8 +12,8 @@ using RMS_Backend.Data;
 namespace RMS_Backend.Migrations
 {
     [DbContext(typeof(RMSDbContext))]
-    [Migration("20240111010154_InitialRMSDatabase")]
-    partial class InitialRMSDatabase
+    [Migration("20240116191740_InitialDatabase")]
+    partial class InitialDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -115,6 +115,11 @@ namespace RMS_Backend.Migrations
                 {
                     b.Property<string>("PersonnelNumber")
                         .HasColumnType("text");
+
+                    b.Property<int>("AdminType")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
 
                     b.Property<string>("Department")
                         .HasColumnType("text");

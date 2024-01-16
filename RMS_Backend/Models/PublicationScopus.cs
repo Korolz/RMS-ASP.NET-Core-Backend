@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace RMS_Backend.Models
 {
@@ -6,6 +7,7 @@ namespace RMS_Backend.Models
     {
         //Enter Scopus Fields
         public string DOI { get; set; }
+        [JsonIgnore]
         public Publication Publication { get; set; }
     }
 }
